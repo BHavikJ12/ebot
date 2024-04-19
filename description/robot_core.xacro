@@ -1,0 +1,317 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+
+    <xacro:include filename="other_parts/box_with_fillet_macro.xacro"/>
+    <xacro:include filename="other_parts/drive_wheel_macro.xacro"/>
+    <xacro:include filename="other_parts/drive_wheel_rim_macro.xacro"/>
+    
+    <xacro:include filename="sensors/sonar.xacro"/>
+    <xacro:include filename="sensors/lidar.xacro"/>
+    <!-- <xacro:include filename="sensors/imu.xacro"/> -->
+    <xacro:include filename="sensors/cam.xacro"/>
+
+
+
+    <xacro:property name="wheel_radius" value="0.05"/>
+    <xacro:property name="wheel_width" value="0.04"/>
+    <xacro:property name="wheel_mass" value="0.04"/>
+    <xacro:property name="spoke_width" value="0.0075"/>
+
+
+
+    <xacro:property name="chassis_height" value="0.075"/>
+    <xacro:property name="wheel_seperation" value="0.26"/>
+    <xacro:property name="dist_btw_front_rear" value="0.3"/>
+
+
+    
+
+
+
+    <!-- BASE LINK -->
+
+    <!-- <base joint/> -->
+    <link name="base_link">  
+    </link>
+
+    <!-- ################# -->
+
+
+
+
+
+    <!-- CHASSIS LINK -->
+
+    <joint name="chassis_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="chassis"/>
+        <origin xyz="0 0 0.05"/>
+    </joint>
+
+
+    <link name="chassis">
+        <xacro:insert_box_with_fillet size_x="0.28" size_y="0.2" size_z="${chassis_height}" 
+        fillet_radius="0.02" material="orange" x="0.09" y="0" z="${chassis_height/2}"/>
+        <collision>
+           <origin xyz="0.09 0 ${chassis_height/2}" rpy="0 0 0"/>
+            <geometry>
+                <box size="0.28 0.2 ${chassis_height}"/>
+            </geometry>
+        </collision>
+
+        <xacro:insert_box_with_fillet size_x="0.4" size_y="0.1" size_z="${chassis_height}" 
+        fillet_radius="0.02" material="orange" x="0.15" y="0" z="${chassis_height/2}"/>
+        <collision>
+           <origin xyz="0.15 0 ${chassis_height/2}" rpy="0 0 0"/>
+            <geometry>
+                <box size="0.4 0.1 ${chassis_height}"/>
+            </geometry>
+        </collision>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="${-pi/2} 0 0"/>
+            <geometry>
+                <cylinder length="${wheel_seperation-0.04}" radius="0.01"/>
+            </geometry>
+        </visual>
+        <collision>
+           <origin xyz="0 0 0" rpy="${-pi/2} 0 0"/>
+            <geometry>
+                <cylinder length="${wheel_seperation-0.04}" radius="0.01"/>
+            </geometry>
+        </collision>
+
+        <visual>
+            <origin xyz="${dist_btw_front_rear} 0 0" rpy="${-pi/2} 0 0"/>
+            <geometry>
+                <cylinder length="${wheel_seperation-0.04}" radius="0.01"/>
+            </geometry>
+        </visual>
+        <collision>
+           <origin xyz="${dist_btw_front_rear} 0 0" rpy="${-pi/2} 0 0"/>
+            <geometry>
+                <cylinder length="${wheel_seperation-0.04}" radius="0.01"/>
+            </geometry>
+        </collision>
+        
+        <xacro:inertial_box mass="2.0" x="0.4" y="0.2" z="${chassis_height}">
+            <origin xyz="0.15 0 ${chassis_height/2}" rpy="0 0 0"/>
+        </xacro:inertial_box>
+    </link>
+    <gazebo reference="chassis">
+        <material>Gazebo/Orange</material>
+    </gazebo>
+    <!--  ########################### -->
+
+
+
+
+
+
+
+
+
+
+
+    <!--  FRONT LEFT SERVO STEER LINK -->
+
+    <joint name="front_left_servo_joint" type="revolute">
+        <parent link="chassis"/>
+        <child link="front_left_servo"/>
+        <origin xyz="${dist_btw_front_rear} 0.1 0"/>
+        <axis xyz="0 0 1"/>
+        <limit effort="1000.0" lower="${-pi/2}" upper="${pi/2}" velocity="0.5"/>
+    </joint>
+
+
+    <link name="front_left_servo">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <cylinder radius="0.01" length="0.02"/>
+            </geometry>
+            <material name="black"/>
+        </visual>
+        <collision>
+           <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <cylinder radius="0.01" length="0.02"/>
+            </geometry>
+        </collision>
+        <xacro:inertial_cylinder mass="0.005" length="0.02" radius="0.01">
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+        </xacro:inertial_cylinder>
+    </link>
+    <gazebo reference="front_left_servo">
+        <material>Gazebo/DarkGrey</material>
+    </gazebo>
+
+    <!-- ############################### -->
+
+
+    <!-- FRONT LEFT DRIVE WHEEL -->
+
+    <xacro:insert_drive_wheel 
+        base_name="front_left_wheel" 
+        parent_name="front_left_servo" 
+        x="0" y="0.03" z="0"
+        mass="${wheel_mass}"
+        radius="${wheel_radius}"
+        thickness="${wheel_width}"/>
+  
+    <xacro:insert_drive_wheel_rim
+        base_name="front_left_rim" 
+        parent_name="front_left_wheel" 
+        x="0" y="0" z="0.001"
+        radius="${wheel_radius}"
+        thickness="${wheel_width}"
+        spoke_width="${spoke_width}"/>
+
+    <!-- ############################# -->
+
+    <!--  FRONT RIGHT SERVO STEER LINK -->
+
+    <joint name="front_right_servo_joint" type="revolute">
+        <parent link="chassis"/>
+        <child link="front_right_servo"/>
+        <origin xyz="${dist_btw_front_rear} -0.1 0"/>
+        <axis xyz="0 0 1"/>
+        <limit effort="1000.0" lower="${-pi/2}" upper="${pi/2}" velocity="0.5"/>
+    </joint>
+
+
+    <link name="front_right_servo">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <cylinder radius="0.01" length="0.02"/>
+            </geometry>
+            <material name="black"/>
+        </visual>
+        <collision>
+           <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <cylinder radius="0.01" length="0.02"/>
+            </geometry>
+        </collision>
+        <xacro:inertial_cylinder mass="0.005" length="0.02" radius="0.01">
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+        </xacro:inertial_cylinder>
+    </link>
+    <gazebo reference="front_right_servo">
+        <material>Gazebo/DarkGrey</material>
+    </gazebo>
+
+    <!-- ############################### -->
+
+
+    <!-- FRONT RIGHT DRIVE WHEEL -->
+
+    <xacro:insert_drive_wheel 
+        base_name="front_right_wheel" 
+        parent_name="front_right_servo" 
+        x="0" y="-0.03" z="0"
+        mass="${wheel_mass}"
+        radius="${wheel_radius}"
+        thickness="${wheel_width}"/>
+        
+  
+    <xacro:insert_drive_wheel_rim
+        base_name="front_right_rim" 
+        parent_name="front_right_wheel" 
+        x="0" y="0" z="-0.001"
+        radius="${wheel_radius}"
+        thickness="${wheel_width}"
+        spoke_width="${spoke_width}"/>
+
+    <!-- ############################### -->
+
+
+    <!-- REAR LEFT DRIVE WHEEL -->
+
+    <xacro:insert_drive_wheel 
+        base_name="rear_left_wheel" 
+        parent_name="chassis" 
+        x="0" y="${wheel_seperation/2}" z="0"
+        mass="${wheel_mass}"
+        radius="${wheel_radius}"
+        thickness="${wheel_width}"/>
+
+
+    <xacro:insert_drive_wheel_rim
+        base_name="rear_left_rim" 
+        parent_name="rear_left_wheel" 
+        x="0" y="0" z="0.001"
+        radius="${wheel_radius}"
+        thickness="${wheel_width}"
+        spoke_width="${spoke_width}"/>
+
+    <!-- ############################### -->
+
+
+    <!-- REAR RIGHT DRIVE WHEEL -->
+
+    <xacro:insert_drive_wheel 
+        base_name="rear_right_wheel" 
+        parent_name="chassis" 
+        x="0" y="${-wheel_seperation/2}" z="0"
+        mass="${wheel_mass}"
+        radius="${wheel_radius}"
+        thickness="${wheel_width}"/>
+
+    <xacro:insert_drive_wheel_rim
+        base_name="rear_right_rim" 
+        parent_name="rear_right_wheel" 
+        x="0" y="0" z="-0.001"
+        radius="${wheel_radius}"
+        thickness="${wheel_width}"
+        spoke_width="${spoke_width}"/>
+
+    <!-- ############################# -->
+
+    <!--  sonar -->
+    <xacro:insert_sonar
+        base_name="sonar" 
+        parent_name="chassis" 
+        x="${0.15+0.2+0.005}" y="0" z="${(chassis_height/2)}"
+        mass="0.005"
+        min_range="0.02" max_range="3.0"
+        resolution="0.01" visualize="false"/>
+
+    
+     <!--  lidar -->
+    <xacro:property name="lidar_z_offset" value="0.04"/>
+    <xacro:insert_lidar 
+        base_name="lidar" 
+        parent_name="chassis" 
+        x="0.2" y="0" z="${chassis_height+lidar_z_offset}"
+        mass="0.05" samples="360"
+        min_angle="${-pi*2}" max_angle="${pi*2}"
+        min_range="0.1" max_range="10"
+        visualize="false"/>
+
+
+    <!--  imu -->
+    <!-- <xacro:insert_imu
+        base_name="imu" 
+        parent_name="chassis" 
+        x="0" y="0" z="${chassis_height}"/> -->
+
+
+    <!--  normal camera style -->
+    <xacro:property name="cam_x_offset" value="0.04"/>
+    <xacro:property name="cam_z_offset" value="0.02"/>
+    <xacro:insert_camera
+        base_name="cam" 
+        parent_name="chassis" 
+        x="0.15" y="0" z="${chassis_height+cam_z_offset+0.15}"
+        mass="0.005"
+        width="640" height="480"
+        min_range="0.02" max_range="5.0"
+        tilt_angle="${pi/20}"
+        visualize="true"/>
+
+
+
+</robot>
