@@ -44,11 +44,6 @@ def generate_launch_description():
         output='screen'
     )
 
-
-
-
-
-
      # Create the launch description and populate
     ld = LaunchDescription()
     

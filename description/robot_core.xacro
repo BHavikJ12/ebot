@@ -11,22 +11,13 @@
     <!-- <xacro:include filename="sensors/imu.xacro"/> -->
     <xacro:include filename="sensors/cam.xacro"/>
 
-
-
     <xacro:property name="wheel_radius" value="0.05"/>
     <xacro:property name="wheel_width" value="0.04"/>
     <xacro:property name="wheel_mass" value="0.04"/>
     <xacro:property name="spoke_width" value="0.0075"/>
-
-
-
     <xacro:property name="chassis_height" value="0.075"/>
     <xacro:property name="wheel_seperation" value="0.26"/>
     <xacro:property name="dist_btw_front_rear" value="0.3"/>
-
-
-    
-
 
 
     <!-- BASE LINK -->
@@ -36,9 +27,6 @@
     </link>
 
     <!-- ################# -->
-
-
-
 
 
     <!-- CHASSIS LINK -->
@@ -51,23 +39,27 @@
 
 
     <link name="chassis">
-        <xacro:insert_box_with_fillet size_x="0.28" size_y="0.2" size_z="${chassis_height}" 
-        fillet_radius="0.02" material="orange" x="0.09" y="0" z="${chassis_height/2}"/>
+        <!-- <xacro:insert_box_with_fillet size_x="0.28" size_y="0.2" size_z="${chassis_height}" 
+        fillet_radius="0.02" material="silver" x="0.09" y="0" z="${chassis_height/2}"/>
         <collision>
            <origin xyz="0.09 0 ${chassis_height/2}" rpy="0 0 0"/>
             <geometry>
                 <box size="0.28 0.2 ${chassis_height}"/>
             </geometry>
-        </collision>
+        </collision> -->
+
+        <!-- Chassis Main Body -->
 
         <xacro:insert_box_with_fillet size_x="0.4" size_y="0.1" size_z="${chassis_height}" 
-        fillet_radius="0.02" material="orange" x="0.15" y="0" z="${chassis_height/2}"/>
+        fillet_radius="0.02" material="silver" x="0.15" y="0" z="${chassis_height/2}"/>
         <collision>
            <origin xyz="0.15 0 ${chassis_height/2}" rpy="0 0 0"/>
             <geometry>
                 <box size="0.4 0.1 ${chassis_height}"/>
             </geometry>
         </collision>
+
+        <!-- Chassis Cylinder Rod -->
 
         <visual>
             <origin xyz="0 0 0" rpy="${-pi/2} 0 0"/>
@@ -100,18 +92,10 @@
         </xacro:inertial_box>
     </link>
     <gazebo reference="chassis">
-        <material>Gazebo/Orange</material>
+        <material>Gazebo/<color rgba="1.0 0.0 0.0 0.0"/>
+        </material>
     </gazebo>
     <!--  ########################### -->
-
-
-
-
-
-
-
-
-
 
 
     <!--  FRONT LEFT SERVO STEER LINK -->
@@ -311,7 +295,5 @@
         min_range="0.02" max_range="5.0"
         tilt_angle="${pi/20}"
         visualize="true"/>
-
-
 
 </robot>
