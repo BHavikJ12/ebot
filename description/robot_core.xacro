@@ -23,22 +23,22 @@
     <!-- BASE LINK -->
 
     <!-- <base joint/> -->
-    <link name="base_link">  
-    </link>
+    <!-- <link name="base_link">  
+    </link> -->
 
     <!-- ################# -->
 
 
     <!-- CHASSIS LINK -->
 
-    <joint name="chassis_joint" type="fixed">
+    <!-- <joint name="chassis_joint" type="fixed">
         <parent link="base_link"/>
         <child link="chassis"/>
         <origin xyz="0 0 0.05"/>
-    </joint>
+    </joint> -->
 
 
-    <link name="chassis">
+    <link name="base_link">
         <!-- <xacro:insert_box_with_fillet size_x="0.28" size_y="0.2" size_z="${chassis_height}" 
         fillet_radius="0.02" material="silver" x="0.09" y="0" z="${chassis_height/2}"/>
         <collision>
@@ -91,8 +91,8 @@
             <origin xyz="0.15 0 ${chassis_height/2}" rpy="0 0 0"/>
         </xacro:inertial_box>
     </link>
-    <gazebo reference="chassis">
-        <material>Gazebo/<color rgba="1.0 0.0 0.0 0.0"/>
+    <gazebo reference="base_link">
+        <material>Gazebo/<color rgba="0.25 0.25 0.25 1"/>
         </material>
     </gazebo>
     <!--  ########################### -->
@@ -101,7 +101,7 @@
     <!--  FRONT LEFT SERVO STEER LINK -->
 
     <joint name="front_left_servo_joint" type="revolute">
-        <parent link="chassis"/>
+        <parent link="base_link"/>
         <child link="front_left_servo"/>
         <origin xyz="${dist_btw_front_rear} 0.1 0"/>
         <axis xyz="0 0 1"/>
@@ -157,7 +157,7 @@
     <!--  FRONT RIGHT SERVO STEER LINK -->
 
     <joint name="front_right_servo_joint" type="revolute">
-        <parent link="chassis"/>
+        <parent link="base_link"/>
         <child link="front_right_servo"/>
         <origin xyz="${dist_btw_front_rear} -0.1 0"/>
         <axis xyz="0 0 1"/>
@@ -216,7 +216,7 @@
 
     <xacro:insert_drive_wheel 
         base_name="rear_left_wheel" 
-        parent_name="chassis" 
+        parent_name="base_link" 
         x="0" y="${wheel_seperation/2}" z="0"
         mass="${wheel_mass}"
         radius="${wheel_radius}"
@@ -238,7 +238,7 @@
 
     <xacro:insert_drive_wheel 
         base_name="rear_right_wheel" 
-        parent_name="chassis" 
+        parent_name="base_link" 
         x="0" y="${-wheel_seperation/2}" z="0"
         mass="${wheel_mass}"
         radius="${wheel_radius}"
@@ -257,7 +257,7 @@
     <!--  sonar -->
     <xacro:insert_sonar
         base_name="sonar" 
-        parent_name="chassis" 
+        parent_name="base_link" 
         x="${0.15+0.2+0.005}" y="0" z="${(chassis_height/2)}"
         mass="0.005"
         min_range="0.02" max_range="3.0"
@@ -268,7 +268,7 @@
     <xacro:property name="lidar_z_offset" value="0.04"/>
     <xacro:insert_lidar 
         base_name="lidar" 
-        parent_name="chassis" 
+        parent_name="base_link" 
         x="0.2" y="0" z="${chassis_height+lidar_z_offset}"
         mass="0.05" samples="360"
         min_angle="${-pi*2}" max_angle="${pi*2}"
@@ -279,7 +279,7 @@
     <!--  imu -->
     <!-- <xacro:insert_imu
         base_name="imu" 
-        parent_name="chassis" 
+        parent_name="base_link" 
         x="0" y="0" z="${chassis_height}"/> -->
 
 
@@ -288,7 +288,7 @@
     <xacro:property name="cam_z_offset" value="0.02"/>
     <xacro:insert_camera
         base_name="cam" 
-        parent_name="chassis" 
+        parent_name="base_link" 
         x="0.15" y="0" z="${chassis_height+cam_z_offset+0.15}"
         mass="0.005"
         width="640" height="480"
