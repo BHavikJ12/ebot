@@ -41,22 +41,17 @@ def generate_launch_description():
                                    '-entity', 'bot'],
                         output='screen')
     
-    # joint_state_publisher_gui_node = Node(
-    #     package='joint_state_publisher_gui',
-    #     executable='joint_state_publisher_gui',
-    #     output='screen'
-    # )
-    
-    # rviz_node = Node(
-    #     package='rviz2',
-    #     executable='rviz2',
-    #     arguments=['-d', rviz_config_file],
-    #     output='screen'
-    # )
+    rviz_node = Node(
+        package='rviz2',
+        executable='rviz2',
+        arguments=['-d', rviz_config_file],
+        output='screen'
+    )
 
     # Launch them all!
     return LaunchDescription([
         rsp,
         gazebo,
-        spawn_entity
+        spawn_entity,
+        rviz_node
     ])
