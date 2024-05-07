@@ -2,10 +2,12 @@
 
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="traktor">
 
-    <xacro:include filename="sensors/sonar.xacro"/>
-    <xacro:include filename="sensors/lidar.xacro"/>
+    <!-- <xacro:include filename="sensors/sonar.xacro"/> -->
+    <!-- <xacro:include filename="sensors/lidar.xacro"/> -->
     <!-- <xacro:include filename="sensors/imu.xacro"/> -->
     <!-- <xacro:include filename="sensors/cam.xacro"/> -->
+    <xacro:include filename="ros2_control.xacro"/>
+    
 
     
 <link name="base_link">
@@ -243,7 +245,7 @@
 
 
 
-<joint name="rear_left_wheel_joint" type="continuous"> <!-- SOL ARKA TEKER DİFERANSİYEL VE SOL ARKA TEKER JOİNTİ-->
+<joint name="rear_left_wheel_joint" type="continuous"> 
   <parent link="base_link"/>
   <child link="rear_left_wheel"/>
     <origin xyz="-1.25 0.85 -0.35" rpy="1.5707 0 0"/>
@@ -253,8 +255,8 @@
 </joint>
 
 
-
 <!-- GPS LINK -->
+
 <link name="gps_link">
   <inertial>
     <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
@@ -309,6 +311,7 @@
 
 
 <!-- İMU SENSÖR LİNK,JOİNT -->
+
 <link name="imu_link">
   <inertial>
     <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
@@ -410,8 +413,8 @@
   </gazebo>
 
 
-
 <!-- LİDAR LİNK -->
+
   <link name="lidar_link">
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -480,6 +483,7 @@
     <material>Gazebo/Red</material>
   </gazebo>
 
+  
   <!-- Camera link -->
 
     <joint name="cam_joint" type="fixed">
@@ -530,7 +534,6 @@
             </plugin>
         </sensor>
     </gazebo> 
-
 
 
   <!--Depth camera link -->
@@ -587,8 +590,8 @@
     </gazebo> 
 
 
-
 <!-- ACKERMANN DRİVE PLUGİN  -->
+
 <gazebo>
   <plugin name="gazebo_ros_ackermann_drive" filename="libgazebo_ros_ackermann_drive.so">
 
